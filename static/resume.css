@@ -1,0 +1,207 @@
+/* ──────────────────────────────────────────
+   Resume CSS  —  shared by preview + PDF
+   ────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --accent:      #1a3a5c;
+  --accent-mid:  #2c5282;
+  --rule:        #c8d4e0;
+  --text:        #1c1c1e;
+  --muted:       #5a6a7a;
+  --bg:          #ffffff;
+
+  --font-body:   'Inter', sans-serif;
+  --font-display:'EB Garamond', Georgia, serif;
+
+  --page-w:      210mm;
+  --page-h:      297mm;
+}
+
+/* ── Page shell ── */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #e8edf2;
+  font-family: var(--font-body);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  width: var(--page-w);
+  min-height: var(--page-h);
+  margin: 0 auto;
+  background: var(--bg);
+  box-sizing: border-box;
+  padding: var(--margin-top, 15mm) var(--margin-right, 20mm) var(--margin-bottom, 15mm) var(--margin-left, 20mm);
+}
+
+/* ── Header ── */
+.resume-header {
+  border-bottom: 2.5px solid var(--accent);
+  padding-bottom: 6mm;
+  margin-bottom: 5mm;
+}
+
+.resume-header .name {
+  font-family: var(--font-display);
+  font-size: 28pt;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+  margin: 0 0 1mm 0;
+}
+
+.resume-header .title {
+  font-size: 11pt;
+  font-weight: 500;
+  color: var(--muted);
+  margin: 0 0 3mm 0;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 6mm;
+  font-size: 8.5pt;
+  color: var(--muted);
+}
+
+.contact-row span {
+  white-space: nowrap;
+}
+
+.contact-row a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Section wrapper ── */
+.section {
+  margin-bottom: 5mm;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 12pt;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1mm;
+  margin: 0 0 3mm 0;
+}
+
+/* ── Summary ── */
+.summary-text {
+  font-size: 9.5pt;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0;
+}
+
+/* ── Experience / Education entries ── */
+.entry {
+  margin-bottom: 4mm;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1mm;
+}
+
+.entry-title {
+  font-family: var(--font-display);
+  font-size: 10.5pt;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.entry-sub {
+  font-size: 9pt;
+  color: var(--accent-mid);
+  font-weight: 500;
+}
+
+.entry-dates {
+  font-size: 8.5pt;
+  color: var(--muted);
+  white-space: nowrap;
+  margin-left: 4mm;
+}
+
+.entry ul {
+  margin: 1mm 0 0 0;
+  padding-left: 4mm;
+  list-style: none;
+}
+
+.entry ul li {
+  font-size: 9pt;
+  line-height: 1.55;
+  color: var(--text);
+  position: relative;
+  padding-left: 3.5mm;
+}
+
+.entry ul li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: var(--accent-mid);
+}
+
+/* ── Skills ── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5mm 8mm;
+}
+
+.skill-row {
+  display: flex;
+  gap: 2mm;
+  font-size: 9pt;
+  line-height: 1.5;
+}
+
+.skill-cat {
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 28mm;
+  flex-shrink: 0;
+  text-transform: capitalize;
+}
+
+.skill-vals {
+  color: var(--text);
+}
+
+/* ── Print / WeasyPrint ── */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html, body {
+    background: none;
+  }
+
+  .page {
+    width: 100%;
+    min-height: 0;
+    box-shadow: none;
+  }
+
+  .editor-toolbar {
+    display: none !important;
+  }
+}

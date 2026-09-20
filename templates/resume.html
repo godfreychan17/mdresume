@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ resume.header.name }} — Resume</title>
+  <style>{{ css }}</style>
+</head>
+<body>
+  <div class="page" style="
+    --margin-top: {{ resume.layout.margins_mm[0] }}mm;
+    --margin-right: {{ resume.layout.margins_mm[1] }}mm;
+    --margin-bottom: {{ resume.layout.margins_mm[2] }}mm;
+    --margin-left: {{ resume.layout.margins_mm[3] }}mm;
+  ">
+    {% for section in resume.sections_order %}
+
+    {% if section == "header" %}
+    <header class="resume-header">
+      <div class="name" data-field="header.name">{{ resume.header.name }}</div>
+      <div class="title" data-field="header.title">{{ resume.header.title }}</div>
+      <div class="contact-row">
+        {% if resume.header.email %}<span data-field="header.email">{{ resume.header.email }}</span>{% endif %}
+        {% if resume.header.phone %}<span data-field="header.phone">{{ resume.header.phone }}</span>{% endif %}
+        {% if resume.header.location %}<span data-field="header.location">{{ resume.header.location }}</span>{% endif %}
+        {% if resume.header.linkedin %}<span data-field="header.linkedin">{{ resume.header.linkedin }}</span>{% endif %}
+        {% if resume.header.github %}<span data-field="header.github">{{ resume.header.github }}</span>{% endif %}
+        {% if resume.header.website %}<span data-field="header.website">{{ resume.header.website }}</span>{% endif %}
+      </div>
+    </header>
+
+    {% elif section == "summary" and resume.summary %}
+    <section class="section">
+      <div class="section-title">Summary</div>
+      <p class="summary-text" data-field="summary">{{ resume.summary }}</p>
+    </section>
+
+    {% elif section == "experience" and resume.experience %}
+    <section class="section">
+      <div class="section-title">Experience</div>
+      {% for entry in resume.experience %}
+      {% set ei = loop.index0 %}
+      <div class="entry">
+        <div class="entry-header">
+          <div>
+            <span class="entry-title" data-field="experience.{{ ei }}.role">{{ entry.role }}</span>
+            <span class="entry-sub">&nbsp;@&nbsp;<span data-field="experience.{{ ei }}.company">{{ entry.company }}</span></span>
+          </div>
+          <span class="entry-dates" data-field="experience.{{ ei }}.dates">{{ entry.dates }}</span>
+        </div>
+        {% if entry.bullets %}
+        <ul>
+          {% for bullet in entry.bullets %}
+          <li data-field="experience.{{ ei }}.bullets.{{ loop.index0 }}">{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+
+    {% elif section == "education" and resume.education %}
+    <section class="section">
+      <div class="section-title">Education</div>
+      {% for entry in resume.education %}
+      {% set ei = loop.index0 %}
+      <div class="entry">
+        <div class="entry-header">
+          <div>
+            <span class="entry-title" data-field="education.{{ ei }}.degree">{{ entry.degree }}</span>
+            <span class="entry-sub">&nbsp;@&nbsp;<span data-field="education.{{ ei }}.institution">{{ entry.institution }}</span></span>
+          </div>
+          <span class="entry-dates" data-field="education.{{ ei }}.dates">{{ entry.dates }}</span>
+        </div>
+        {% if entry.details %}
+        <ul>
+          {% for detail in entry.details %}
+          <li data-field="education.{{ ei }}.details.{{ loop.index0 }}">{{ detail }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+
+    {% elif section == "skills" and resume.skills %}
+    <section class="section">
+      <div class="section-title">Skills</div>
+      <div class="skills-grid">
+        {% for cat, vals in resume.skills.items() %}
+        <div class="skill-row">
+          <span class="skill-cat">{{ cat }}</span>
+          <span class="skill-vals" data-field="skills.{{ cat }}">{{ vals }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% endfor %}
+  </div>
+</body>
+</html>

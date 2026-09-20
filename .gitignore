@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Generated output
+output/
+*.pdf
+
+# User-supplied layout reference (personal file, not part of the project)
+template.pdf
+
+# macOS
+.DS_Store

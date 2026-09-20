@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ resume.header.name }} — mdresume</title>
+  <style>
+    {{ css }}
+
+    /* ── Editor toolbar ── */
+    .editor-toolbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      background: #1a3a5c;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+    }
+    .editor-toolbar .brand {
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      margin-right: auto;
+    }
+    .editor-toolbar button {
+      padding: 5px 14px;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      border-radius: 4px;
+      background: transparent;
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .editor-toolbar button:hover  { background: rgba(255, 255, 255, 0.15); }
+    .editor-toolbar button:disabled { opacity: 0.45; cursor: default; }
+
+    #status        { font-size: 11px; color: rgba(255, 255, 255, 0.75); min-width: 100px; }
+    #status.ok     { color: #6ee7b7; }
+    #status.busy   { color: #fcd34d; }
+    #status.err    { color: #fca5a5; }
+
+    body { padding-top: 44px; }
+
+    [contenteditable]:focus {
+      outline: 1.5px solid #2c5282;
+      border-radius: 2px;
+      background: #f0f5ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="editor-toolbar">
+    <span class="brand">mdresume</span>
+    <span id="status">All saved</span>
+    <button id="btn-save">Save</button>
+    <button id="btn-export">Export PDF</button>
+    <a id="download-anchor" style="display:none"></a>
+  </div>
+
+  <div class="page" style="
+    --margin-top: {{ resume.layout.margins_mm[0] }}mm;
+    --margin-right: {{ resume.layout.margins_mm[1] }}mm;
+    --margin-bottom: {{ resume.layout.margins_mm[2] }}mm;
+    --margin-left: {{ resume.layout.margins_mm[3] }}mm;
+  ">
+    {% for section in resume.sections_order %}
+
+    {% if section == "header" %}
+    <header class="resume-header">
+      <div class="name" data-field="header.name" contenteditable="true">{{ resume.header.name }}</div>
+      <div class="title" data-field="header.title" contenteditable="true">{{ resume.header.title }}</div>
+      <div class="contact-row">
+        {% if resume.header.email %}<span data-field="header.email" contenteditable="true">{{ resume.header.email }}</span>{% endif %}
+        {% if resume.header.phone %}<span data-field="header.phone" contenteditable="true">{{ resume.header.phone }}</span>{% endif %}
+        {% if resume.header.location %}<span data-field="header.location" contenteditable="true">{{ resume.header.location }}</span>{% endif %}
+        {% if resume.header.linkedin %}<span data-field="header.linkedin" contenteditable="true">{{ resume.header.linkedin }}</span>{% endif %}
+        {% if resume.header.github %}<span data-field="header.github" contenteditable="true">{{ resume.header.github }}</span>{% endif %}
+        {% if resume.header.website %}<span data-field="header.website" contenteditable="true">{{ resume.header.website }}</span>{% endif %}
+      </div>
+    </header>
+
+    {% elif section == "summary" and resume.summary %}
+    <section class="section">
+      <div class="section-title">Summary</div>
+      <p class="summary-text" data-field="summary" contenteditable="true">{{ resume.summary }}</p>
+    </section>
+
+    {% elif section == "experience" and resume.experience %}
+    <section class="section">
+      <div class="section-title">Experience</div>
+      {% for entry in resume.experience %}
+      {% set ei = loop.index0 %}
+      <div class="entry">
+        <div class="entry-header">
+          <div>
+            <span class="entry-title" data-field="experience.{{ ei }}.role" contenteditable="true">{{ entry.role }}</span>
+            <span class="entry-sub">&nbsp;@&nbsp;<span data-field="experience.{{ ei }}.company" contenteditable="true">{{ entry.company }}</span></span>
+          </div>
+          <span class="entry-dates" data-field="experience.{{ ei }}.dates" contenteditable="true">{{ entry.dates }}</span>
+        </div>
+        {% if entry.bullets %}
+        <ul>
+          {% for bullet in entry.bullets %}
+          <li data-field="experience.{{ ei }}.bullets.{{ loop.index0 }}" contenteditable="true">{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+
+    {% elif section == "education" and resume.education %}
+    <section class="section">
+      <div class="section-title">Education</div>
+      {% for entry in resume.education %}
+      {% set ei = loop.index0 %}
+      <div class="entry">
+        <div class="entry-header">
+          <div>
+            <span class="entry-title" data-field="education.{{ ei }}.degree" contenteditable="true">{{ entry.degree }}</span>
+            <span class="entry-sub">&nbsp;@&nbsp;<span data-field="education.{{ ei }}.institution" contenteditable="true">{{ entry.institution }}</span></span>
+          </div>
+          <span class="entry-dates" data-field="education.{{ ei }}.dates" contenteditable="true">{{ entry.dates }}</span>
+        </div>
+        {% if entry.details %}
+        <ul>
+          {% for detail in entry.details %}
+          <li data-field="education.{{ ei }}.details.{{ loop.index0 }}" contenteditable="true">{{ detail }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+
+    {% elif section == "skills" and resume.skills %}
+    <section class="section">
+      <div class="section-title">Skills</div>
+      <div class="skills-grid">
+        {% for cat, vals in resume.skills.items() %}
+        <div class="skill-row">
+          <span class="skill-cat">{{ cat }}</span>
+          <span class="skill-vals" data-field="skills.{{ cat }}" contenteditable="true">{{ vals }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% endfor %}
+  </div>
+
+  <script src="/static/editor.js"></script>
+</body>
+</html>
